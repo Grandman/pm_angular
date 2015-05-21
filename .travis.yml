@@ -4,3 +4,4 @@ rvm:
 deploy:
   provider: heroku
   api_key: e8a29153-8380-4f1b-be1f-5756a4fb74d6
+  app: pm-angular
