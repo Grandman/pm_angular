@@ -34,6 +34,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'coveralls', require: false
 
+gem 'factory_girl'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
 
