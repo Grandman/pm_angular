@@ -7,3 +7,6 @@ deploy:
   provider: heroku
   api_key: e8a29153-8380-4f1b-be1f-5756a4fb74d6
   app: pm-angular
+addons:
+  code_climate:
+    repo_token: 30489289fe9cff0a0b17a6dd7bda79bb65bd6f2b4da153b6a10829ecf819f015
