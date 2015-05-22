@@ -15,10 +15,21 @@ RSpec.describe 'projects', type: :request do
     end
   end
   context 'project create' do
-    fixtures :projects
-    let!(:project_attributes) { attributes_for :project }
-    it 'render page' do
+    let(:project_attributes) { attributes_for :project }
+    it 'success if valid project' do
       post "/api/projects/", project: project_attributes
+      expect(response).to be_success
+    end
+    it 'error if not valid' do
+      post "/api/projects/", project: { test: 'test' }
+      expect(response).to have_http_status(422)
+    end
+  end
+  context 'project update' do
+    let(:project) { create :project }
+    let(:project_attributes) { attributes_for :project }
+    it 'success if valid project' do
+      patch "/api/projects/1", project: project_attributes
       expect(response).to be_success
     end
   end
