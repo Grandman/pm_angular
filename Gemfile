@@ -38,8 +38,13 @@ gem 'factory_girl_rails'
 gem 'factory_girl_sequences'
 gem 'codeclimate-test-reporter', group: :test, require: nil
 
+gem 'bower-rails'
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
+  gem 'capybara'
+  gem 'database_cleaner'
+  gem 'selenium-webdriver'
 
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
