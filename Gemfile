@@ -34,6 +34,10 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 
 gem 'coveralls', require: false
 
+gem 'factory_girl_rails'
+gem 'factory_girl_sequences'
+gem 'codeclimate-test-reporter', group: :test, require: nil
+
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
 
