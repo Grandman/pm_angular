@@ -24,7 +24,6 @@ class Api::ProjectsController < Api::ApplicationController
     else
       render json: 'fail', status: 422
     end
-
   end
 
   def project_params
