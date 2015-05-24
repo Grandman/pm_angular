@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 ruby '2.1.5'
 
+gem 'sprockets', '2.12.3'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.0'
 # Use sqlite3 as the database for Active Record
@@ -39,6 +40,16 @@ gem 'factory_girl_sequences'
 gem 'codeclimate-test-reporter', group: :test, require: nil
 
 gem 'bower-rails'
+gem 'angular-rails-templates'
+gem 'angularjs-rails-resource', '~> 2.0.0'
+
+gem "foreman"
+
+group :production, :staging do
+ gem "rails_12factor"
+ gem "rails_stdout_logging"
+ gem "rails_serve_static_assets"
+end
 
 group :development, :test do
   gem 'rspec-rails', '~> 3.0'
