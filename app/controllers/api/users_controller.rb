@@ -15,7 +15,7 @@ class Api::UsersController < Api::ApplicationController
   def update
     user = User.find(params[:id])
     if user.update(user_params)
-      render json: 'ok', status: 200
+      render json: user, status: 200
     else
       render json: 'fail', status: 422
     end

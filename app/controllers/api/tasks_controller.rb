@@ -19,7 +19,7 @@ class Api::TasksController < Api::ApplicationController
   def update
     task = Task.find(params[:id])
     if task.update(task_params)
-      render json: 'ok', status: 200
+      render json: task, status: 200
     else
       render json: 'fail', status: 422
     end

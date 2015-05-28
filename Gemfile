@@ -42,6 +42,7 @@ gem 'codeclimate-test-reporter', group: :test, require: nil
 gem 'bower-rails'
 gem 'angular-rails-templates'
 gem 'angularjs-rails-resource', '~> 2.0.0'
+gem 'angular_rails_csrf'
 
 gem "foreman"
 
