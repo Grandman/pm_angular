@@ -1,0 +1,16 @@
+<div class="input-group">
+    <input type="text" class="form-control" id="search" ng-model="search.title">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+</div>
+    <table class="table table-hover">
+    <tr><th>Название</th><th>Управление</th></tr>
+    <tr ng-repeat="project in projects | filter:search">
+        <td>
+            <a href="{{location + '/' + project.id}}">{{project.title}}</a>
+        </td>
+        <td>
+            <button class="btn btn-info" ng-click="saveProject($index);">Редактировать</button>
+            <a href="#/index">aaaa</a>
+        </td>
+    </tr>
+</table>

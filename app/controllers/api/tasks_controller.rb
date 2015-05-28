@@ -4,7 +4,7 @@ class Api::TasksController < Api::ApplicationController
   end
 
   def index
-    render json: Task.all
+    render json: Project.find(params[:project_id]).tasks
   end
 
   def create
