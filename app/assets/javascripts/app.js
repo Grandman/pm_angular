@@ -4,6 +4,10 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'projects.html',
                 controller: 'ProjectsController'
             });
+            $routeProvider.when('/projects/new', {
+                templateUrl: 'project/new.html',
+                controller: 'ProjectController'
+            });
             $routeProvider.when('/projects/:id', {
                 templateUrl: 'project/main.html',
                 controller: 'ProjectController'
@@ -12,12 +16,24 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'project/tasks.html',
                 controller: 'TasksController'
             });
+            $routeProvider.when('/projects/:id/tasks/new', {
+                templateUrl: 'task/new.html',
+                controller: 'TaskController'
+            });
+            $routeProvider.when('/projects/:id/tasks/:taskId', {
+                templateUrl: 'task/show.html',
+                controller: 'TaskController'
+            });
+            $routeProvider.when('/projects/:id/tasks/:taskId/edit', {
+                templateUrl: 'task/edit.html',
+                controller: 'TaskController'
+            });
        }])
        .factory('Project', ['railsResourceFactory', function (railsResourceFactory) {
             return railsResourceFactory({url: '/api/projects', name: 'project'});
        }])
        .factory('Task', ['railsResourceFactory', function (railsResourceFactory) {
-           return railsResourceFactory({url: '/api/projects/{{projectId}}/tasks', name: 'task'});
+           return railsResourceFactory({url: '/api/projects/{{projectId}}/tasks/{{id}}', name: 'task'});
        }]);
 
 angular.module('controllers', [])
@@ -82,9 +98,18 @@ angular.module('controllers', [])
                 $scope.id = $routeParams.id;
             }
             $scope.tasksUrl = $location.absUrl() + "/tasks";
-            Project.get($scope.id).then(function(project){
-                $scope.project = project;
-            });
+            if($scope.id) {
+                Project.get($scope.id).then(function (project) {
+                    $scope.project = project;
+                });
+            }
+            else{
+                $scope.project = new Project();
+            }
+            $scope.createProject = function(){
+                $scope.project.create();
+                $location.path("/projects");
+            };
             $scope.saveProject = function(){
                 $scope.project.save();
             };
@@ -95,6 +120,7 @@ angular.module('controllers', [])
         .controller("TasksController", ['$scope', '$timeout', '$routeParams', '$location', 'Project', 'Task', function ($scope,  $timeout, $routeParams, $location, Project, Task) {
             var timer;
             $scope.projectId = $routeParams.id;
+            $scope.location = $location.absUrl();
             Task.get({projectId: $scope.projectId}).then(function(tasks){
                 $scope.tasks = tasks;
             });
@@ -134,4 +160,27 @@ angular.module('controllers', [])
                 myLoop();
             };
             myLoop();
+        }])
+        .controller("TaskController", ['$scope', '$routeParams', '$location', 'Project', 'Task', function ($scope, $routeParams, $location, Project, Task) {
+            $scope.projectId = $routeParams.id;
+            console.log($routeParams);
+            if($routeParams.taskId){
+                $scope.taskId = $routeParams.taskId;
+                Task.get({ projectId: $scope.projectId, id: $scope.taskId}).then(function(task){
+                    $scope.task = task;
+                });
+            }
+            else{
+                $scope.task = new Task({projectId: $scope.projectId});
+            }
+
+            $scope.createTask = function(){
+                $scope.task.create();
+                $location.path("/projects/" + $scope.projectId + "/tasks/");
+            };
+            $scope.updateTask = function(){
+                $scope.task.update();
+                $location.path('/projects/' + $scope.projectId + '/tasks/')
+            };
+            $scope.tasksUrl = $location.absUrl() + "/tasks";
         }])

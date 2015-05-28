@@ -9,9 +9,9 @@ class Api::ProjectsController < Api::ApplicationController
   end
 
   def create
-    @project = Project.new(project_params)
+    @project = Project.create(project_params)
     if @project.valid?
-      render json: 'ok', status: 200
+      render json: @project, status: 200
     else
       render json: 'fail', status: 422
     end

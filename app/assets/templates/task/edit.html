@@ -1,0 +1,11 @@
+<form>
+    <div class="form-group">
+        <label for="title">Название</label>
+        <input type="text" class="form-control" id="title" placeholder="Введите название" ng-model="task.title">
+    </div>
+    <div class="form-group">
+        <label for="description">Описание</label>
+        <textarea class="form-control" id="description" placeholder="Введите описание" ng-model="task.description"></textarea>
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="updateTask();">Отредактировать</button>
+</form>
