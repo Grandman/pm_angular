@@ -1,0 +1,25 @@
+<ul class="nav nav-tabs">
+    <li role="presentation"><a href="#/projects/{{projectId}}/">Основная информация</a></li>
+    <li role="presentation" class="active"><a href="{{tasksUrl}}">Задачи</a></li>
+    <li role="presentation"><a href="#">Участники</a></li>
+    <li role="presentation"><a href="#">Настройки</a></li>
+</ul>
+<div class="input-group">
+    <input type="text" class="form-control" id="search" ng-model="search.title">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+</div>
+<hr>
+<a href="{{location + '/new'}}" class="btn btn-info">Добавить задачу</a>
+<hr>
+<table class="table table-hover">
+    <tr><th>Название</th><th>Управление</th></tr>
+    <tr ng-repeat="task in tasks | filter:search">
+        <td>
+            <a href="{{location + '/' + task.id}}">{{task.title}}</a>
+        </td>
+        <td>
+            <button class="btn btn-info" ng-click="saveProject($index);">Редактировать</button>
+            <a href="#/index">aaaa</a>
+        </td>
+    </tr>
+</table>

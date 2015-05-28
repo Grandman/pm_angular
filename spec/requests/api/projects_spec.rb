@@ -39,4 +39,12 @@ RSpec.describe 'projects', type: :request do
       expect(response).to have_http_status(422)
     end
   end
+
+  context 'project destroy' do
+    let!(:project) { create :project }
+    it 'success delete' do
+      delete "/api/projects/1"
+      expect(response).to be_success
+    end
+  end
 end

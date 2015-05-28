@@ -1,9 +1,14 @@
 Rails.application.routes.draw do
   namespace :api do
-    resources :projects
-    resources :tasks
+    resources :projects do
+      resources :tasks
+    end
     resources :groups
     resources :users
+  end
+
+  scope module: :web do
+    root to: 'home#index'
   end
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

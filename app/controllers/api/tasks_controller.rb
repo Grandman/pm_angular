@@ -4,13 +4,13 @@ class Api::TasksController < Api::ApplicationController
   end
 
   def index
-    render json: Task.all
+    render json: Project.find(params[:project_id]).tasks
   end
 
   def create
-    @task = Task.new(task_params)
+    @task = Project.find(params[:project_id]).tasks.create(task_params)
     if @task.valid?
-      render json: 'ok', status: 200
+      render json: @task, status: 200
     else
       render json: 'fail', status: 422
     end
@@ -19,13 +19,13 @@ class Api::TasksController < Api::ApplicationController
   def update
     task = Task.find(params[:id])
     if task.update(task_params)
-      render json: 'ok', status: 200
+      render json: task, status: 200
     else
       render json: 'fail', status: 422
     end
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :project)
+    params.require(:task).permit(:title, :description, :project_id)
   end
 end

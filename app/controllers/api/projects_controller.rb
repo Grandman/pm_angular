@@ -9,9 +9,9 @@ class Api::ProjectsController < Api::ApplicationController
   end
 
   def create
-    @project = Project.new(project_params)
+    @project = Project.create(project_params)
     if @project.valid?
-      render json: 'ok', status: 200
+      render json: @project, status: 200
     else
       render json: 'fail', status: 422
     end
@@ -20,7 +20,7 @@ class Api::ProjectsController < Api::ApplicationController
   def update
     project = Project.find(params[:id])
     if project.update(project_params)
-      render json: 'ok', status: 200
+      render json: project, status: 200
     else
       render json: 'fail', status: 422
     end
@@ -28,5 +28,14 @@ class Api::ProjectsController < Api::ApplicationController
 
   def project_params
     params.require(:project).permit(:title, :description)
+  end
+
+  def destroy
+    project = Project.find(params[:id])
+    if project.destroy
+      render json: 'ok', status: 200
+    else
+      render json: 'fail', status: 422
+    end
   end
 end
