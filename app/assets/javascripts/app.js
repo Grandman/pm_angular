@@ -28,12 +28,19 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'task/edit.html',
                 controller: 'TaskController'
             });
+            $routeProvider.when('/projects/:project_id/users', {
+                templateUrl: 'project/users.html',
+                controller: 'UsersController'
+            });
        }])
        .factory('Project', ['railsResourceFactory', function (railsResourceFactory) {
             return railsResourceFactory({url: '/api/projects', name: 'project'});
        }])
        .factory('Task', ['railsResourceFactory', function (railsResourceFactory) {
            return railsResourceFactory({url: '/api/projects/{{projectId}}/tasks/{{id}}', name: 'task'});
+       }])
+       .factory('User', ['railsResourceFactory', function (railsResourceFactory) {
+           return railsResourceFactory({url: '/api/users', name: 'user'});
        }]);
 
 angular.module('controllers', [])
@@ -183,4 +190,19 @@ angular.module('controllers', [])
                 $location.path('/projects/' + $scope.projectId + '/tasks/')
             };
             $scope.tasksUrl = $location.absUrl() + "/tasks";
+        }])
+        .controller("UsersController", ['$scope', '$routeParams', '$location', 'Project', 'Task', 'User', function ($scope, $routeParams, $location, Project, Task, User) {
+            $scope.projectId = $routeParams.project_id;
+            console.log($routeParams);
+            if($scope.projectId){
+                User.get({},{projectId: $scope.projectId}).then(function(users){
+                    $scope.users = users;
+                });
+            }
+            else{
+                $scope.users = User.get().then(function(users){
+                    $scope.users = users;
+                });
+            }
+            $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
         }])

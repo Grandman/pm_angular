@@ -1,6 +1,15 @@
 class Api::UsersController < Api::ApplicationController
+  def index
+    p params
+    if params[:project_id]
+      render json: Project.find(params[:project_id]).users
+    else
+      render json: User.all
+    end
+  end
+
   def show
-    render json: User.find(params[:id])
+      render json: User.find(params[:id])
   end
 
   def create
