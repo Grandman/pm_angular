@@ -4,7 +4,7 @@ class Api::UsersController < Api::ApplicationController
     if params[:project_id]
       render json: Group.includes(users: :tasks).where( tasks: { project_id: params[:project_id]}).to_json(include: :users)
     else
-      render json: User.all
+      render json: Group.all.to_json(include: :users)
     end
   end
 

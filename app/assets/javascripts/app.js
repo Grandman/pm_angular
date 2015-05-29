@@ -200,13 +200,14 @@ angular.module('controllers', [])
             console.log($routeParams);
             if($scope.projectId){
                 User.get({},{projectId: $scope.projectId}).then(function(users){
-                    $scope.users = users;
-                    console.log($scope.users);
+                    $scope.groups = users;
+                    console.log($scope.groups);
                 });
             }
             else{
-                $scope.users = User.get().then(function(users){
-                    $scope.users = users;
+                User.get().then(function(users){
+                    $scope.groups = users;
+                    console.log($scope.groups);
                 });
             }
             $scope.query = '';
