@@ -2,7 +2,7 @@ class Api::UsersController < Api::ApplicationController
   def index
     p params
     if params[:project_id]
-      render json: Project.find(params[:project_id]).users
+      render json: Group.includes(users: :tasks).where( tasks: { project_id: params[:project_id]}).to_json(include: :users)
     else
       render json: User.all
     end

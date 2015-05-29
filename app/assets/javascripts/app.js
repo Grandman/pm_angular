@@ -32,6 +32,10 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'project/users.html',
                 controller: 'UsersController'
             });
+            $routeProvider.when('/users', {
+                templateUrl: 'users.html',
+                controller: 'UsersController'
+            });
        }])
        .factory('Project', ['railsResourceFactory', function (railsResourceFactory) {
             return railsResourceFactory({url: '/api/projects', name: 'project'});
@@ -197,6 +201,7 @@ angular.module('controllers', [])
             if($scope.projectId){
                 User.get({},{projectId: $scope.projectId}).then(function(users){
                     $scope.users = users;
+                    console.log($scope.users);
                 });
             }
             else{
@@ -204,5 +209,16 @@ angular.module('controllers', [])
                     $scope.users = users;
                 });
             }
+            $scope.query = '';
+
+            $scope.search = function (user) {
+                var query = $scope.query.toLowerCase(),
+                    fullname = user.firstName.toLowerCase() + ' ' + user.secondName.toLowerCase();
+
+                if (fullname.indexOf(query) != -1) {
+                    return true;
+                }
+                return false;
+            };
             $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
         }])

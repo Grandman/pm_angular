@@ -1,6 +1,6 @@
 class Api::GroupsController < Api::ApplicationController
   def index
-    render json: Group.all
+    render json: Group.all.to_json(include: :users)
   end
 
   def show
