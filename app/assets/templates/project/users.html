@@ -1,0 +1,18 @@
+<ul class="nav nav-tabs">
+    <li role="presentation"><a href="#/projects/{{projectId}}/">Основная информация</a></li>
+    <li role="presentation"><a href="{{tasksUrl}}">Задачи</a></li>
+    <li role="presentation" class="active"><a href="#/projects/{{projectId}}/users">Участники</a></li>
+    <li role="presentation"><a href="#">Настройки</a></li>
+</ul>
+<div class="input-group">
+    <input type="text" class="form-control" id="search" ng-model="query">
+    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+</div>
+<hr>
+<div class="row" ng-repeat="group in groups">
+    <div class="text-center">{{group.name}}</div>
+    <div class="col-md-3 col-sm-4 col-xs-6 text-center" ng-repeat="user in group.users | filter:search">
+        <img src="{{user.photoUrl}}">
+        <p>{{user.firstName}} {{user.secondName}}</p>
+    </div>
+</div>

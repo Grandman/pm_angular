@@ -1,0 +1,12 @@
+<ul class="nav nav-tabs">
+    <li role="presentation"><a href="#/users/{{user.id}}">Информация</a></li>
+    <li role="presentation" class="active"><a href="#/users/{{user.id}}/edit">Редактирование</a></li>
+</ul>
+<br>
+<div class="row">
+    <div class="col-sm-6 col-md-6" ng-include src="'users/_form.html'">
+    </div>
+    <div class="col-sm-2 col-md-2">
+        <p ng-show="user.photoUrl"><br><img src="{{user.photoUrl}}"></p>
+    </div>
+</div>

@@ -11,15 +11,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150524120625) do
+ActiveRecord::Schema.define(version: 20150530162811) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "groups", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.integer  "cost_per_hour"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -27,6 +28,11 @@ ActiveRecord::Schema.define(version: 20150524120625) do
     t.string   "description"
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
+  end
+
+  create_table "projects_users", force: :cascade do |t|
+    t.integer "project_id"
+    t.integer "user_id"
   end
 
   create_table "tasks", force: :cascade do |t|
@@ -39,6 +45,11 @@ ActiveRecord::Schema.define(version: 20150524120625) do
 
   add_index "tasks", ["project_id"], name: "index_tasks_on_project_id", using: :btree
 
+  create_table "tasks_users", force: :cascade do |t|
+    t.integer "task_id"
+    t.integer "user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "first_name"
     t.string   "second_name"
@@ -46,8 +57,11 @@ ActiveRecord::Schema.define(version: 20150524120625) do
     t.string   "email"
     t.string   "password"
     t.integer  "group_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",    null: false
+    t.datetime "updated_at",    null: false
+    t.string   "photo_url"
+    t.integer  "cost_per_hour"
+    t.string   "phone"
   end
 
   add_foreign_key "tasks", "projects"

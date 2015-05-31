@@ -1,0 +1,11 @@
+<form>
+    <div class="form-group">
+        <label for="name">Название</label>
+        <input type="text" class="form-control" id="name" placeholder="Введите название" ng-model="group.name">
+    </div>
+    <div class="form-group">
+        <label for="costPerHour">Стоимость часа</label>
+        <input type="number" class="form-control" id="costPerHour" placeholder="Введите описание" ng-model="group.costPerHour">
+    </div>
+    <button type="submit" class="btn btn-default" ng-click="updateGroup();">Изменить</button>
+</form>
