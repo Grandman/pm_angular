@@ -5,6 +5,7 @@ FactoryGirl.define do
     login "MyString"
     email "MyString"
     password "MyString"
-    group nil
+    cost_per_hour { generate :integer }
+    group { create :group }
   end
 end

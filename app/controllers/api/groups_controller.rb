@@ -8,7 +8,7 @@ class Api::GroupsController < Api::ApplicationController
   end
 
   def create
-    group = Group.new(group_params)
+    group = Group.create(group_params)
     if group.valid?
       render json: 'ok', status: 200
     else
@@ -19,6 +19,15 @@ class Api::GroupsController < Api::ApplicationController
   def update
     group = Group.find(params[:id])
     if group.update(group_params)
+      render json: group, status: 200
+    else
+      render json: 'fail', status: 422
+    end
+  end
+
+  def destroy
+    group = Group.find(params[:id])
+    if group.destroy
       render json: 'ok', status: 200
     else
       render json: 'fail', status: 422
@@ -26,6 +35,6 @@ class Api::GroupsController < Api::ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name)
+    params.require(:group).permit(:name, :cost_per_hour)
   end
 end

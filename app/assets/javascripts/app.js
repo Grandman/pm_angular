@@ -36,6 +36,26 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'users.html',
                 controller: 'UsersController'
             });
+            $routeProvider.when('/users/new', {
+                templateUrl: 'users/new.html',
+                controller: 'UserController'
+            });
+            $routeProvider.when('/users/:user_id', {
+                templateUrl: 'users/show.html',
+                controller: 'UserController'
+            });
+            $routeProvider.when('/users/:user_id/edit', {
+                templateUrl: 'users/edit.html',
+                controller: 'UserController'
+            });
+            $routeProvider.when('/groups/new', {
+                templateUrl: 'groups/new.html',
+                controller: 'GroupController'
+            });
+            $routeProvider.when('/groups/:group_id/edit', {
+                templateUrl: 'groups/edit.html',
+                controller: 'GroupController'
+            });
        }])
        .factory('Project', ['railsResourceFactory', function (railsResourceFactory) {
             return railsResourceFactory({url: '/api/projects', name: 'project'});
@@ -45,7 +65,10 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
        }])
        .factory('User', ['railsResourceFactory', function (railsResourceFactory) {
            return railsResourceFactory({url: '/api/users', name: 'user'});
-       }]);
+       }])
+        .factory('Group', ['railsResourceFactory', function (railsResourceFactory) {
+            return railsResourceFactory({url: '/api/groups', name: 'group'});
+        }]);
 
 angular.module('controllers', [])
        .controller("ProjectsController", ['$scope', '$timeout', '$location', 'Project', function ($scope, $timeout, $location, Project) {
@@ -195,7 +218,7 @@ angular.module('controllers', [])
             };
             $scope.tasksUrl = $location.absUrl() + "/tasks";
         }])
-        .controller("UsersController", ['$scope', '$routeParams', '$location', 'Project', 'Task', 'User', function ($scope, $routeParams, $location, Project, Task, User) {
+        .controller("UsersController", ['$scope', '$routeParams', '$location', 'Project', 'Task', 'User', 'Group', function ($scope, $routeParams, $location, Project, Task, User, Group) {
             $scope.projectId = $routeParams.project_id;
             console.log($routeParams);
             if($scope.projectId){
@@ -221,5 +244,61 @@ angular.module('controllers', [])
                 }
                 return false;
             };
+            $scope.deleteGroup = function(index){
+                console.log($scope.groups[index]);
+                Group.get($scope.groups[index].id).then(function(group){
+                        group.delete();
+                        $scope.groups.splice(index, 1);
+                    }
+                );
+                $route.reload();
+            };
             $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
+        }])
+        .controller("UserController", ['$scope', '$routeParams', '$location', 'User', 'Group', function ($scope, $routeParams, $location, User, Group) {
+            if($routeParams.user_id){
+                User.get($routeParams.user_id).then(function(user){
+                    $scope.user = user;
+                });
+            }
+            else{
+                $scope.user = new User();
+            }
+            Group.get().then(function(groups){
+                $scope.groups = groups;
+            });
+            $scope.createUser = function(){
+                $scope.user.create().then(function(user){
+                    $location.path("users/"+ user.id)
+                });
+
+            };
+            $scope.updateUser = function(){
+                $scope.user.save();
+                $location.path("users/"+ $scope.user.id)
+            };
+            $scope.deleteUser = function(){
+                $scope.user.delete();
+                $location.path("users/")
+            };
+            $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
+        }])
+        .controller("GroupController", ['$scope', '$routeParams', '$location', 'Group', function ($scope, $routeParams, $location, Group) {
+            if($routeParams.group_id){
+               Group.get($routeParams.group_id).then(function(group){
+                   $scope.group = group;
+               });
+            }
+            else{
+                $scope.group = new Group();
+            }
+            $scope.createGroup = function(){
+                $scope.group.create();
+                $location.path("users/")
+            };
+            $scope.updateGroup = function(){
+                $scope.group.update();
+                $location.path("users/")
+            };
+        $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
         }])

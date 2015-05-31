@@ -9,13 +9,13 @@ class Api::UsersController < Api::ApplicationController
   end
 
   def show
-      render json: User.find(params[:id])
+      render json: User.find(params[:id]).to_json(include: :group)
   end
 
   def create
-    user = User.new(user_params)
+    user = User.create(user_params)
     if user.valid?
-      render json: 'ok', status: 200
+      render json: user, status: 200
     else
       render json: 'fail', status: 422
     end
@@ -30,7 +30,16 @@ class Api::UsersController < Api::ApplicationController
     end
   end
 
+  def destroy
+    user = User.find(params[:id])
+    if user.destroy
+      render json: 'ok', status: 200
+    else
+      render json: 'fail', status: 422
+    end
+  end
+
   def user_params
-    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group)
+    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url)
   end
 end

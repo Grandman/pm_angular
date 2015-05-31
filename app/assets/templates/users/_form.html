@@ -1,0 +1,39 @@
+<form>
+    <div class="form-group">
+        <label for="firstName">Имя</label>
+        <input type="text" class="form-control" id="firstName" placeholder="Введите название" ng-model="user.firstName">
+    </div>
+    <div class="form-group">
+        <label for="secondName">Фамилия</label>
+        <input type="text" class="form-control" id="secondName" placeholder="Введите название" ng-model="user.secondName">
+    </div>
+    <div class="form-group">
+        <label for="photoUrl">Ссылка на фотографию:</label>
+        <input type="text" class="form-control" id="photoUrl" placeholder="Введите название" ng-model="user.photoUrl">
+    </div>
+    <div class="form-group">
+        <label for="group">Группа</label>
+        <select id="group" ng-model="user.groupId"
+                ng-options="group.id as group.name for group in groups">
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" placeholder="Введите название" ng-model="user.email">
+    </div>
+    <div class="form-group">
+        <label for="login">Логин:</label>
+        <input type="text" class="form-control" id="login" placeholder="Введите название" ng-model="user.login">
+    </div>
+    <div class="form-group">
+        <label for="password">Пароль:</label>
+        <input type="text" class="form-control" id="password" placeholder="Введите название" ng-model="user.password">
+    </div>
+    <div class="form-group">
+        <label for="costPerHour">Стоимость часа:</label>
+        <input type="number" class="form-control" id="costPerHour" placeholder="Введите название" ng-model="user.costPerHour">
+    </div>
+
+    <button type="submit" class="btn btn-default" ng-click="user.id ? updateUser() : createUser()">{{user.id ? 'Отредактировать' : 'Создать'}}</button>
+    <button type="submit" class="btn btn-danger" ng-show="user.id" ng-click="deleteUser()">Удалить</button>
+</form>

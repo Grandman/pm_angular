@@ -3,10 +3,17 @@
     <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
 </div>
 <hr>
-<div class="row" ng-repeat="group in groups">
-    <div class="text-center">{{group.name}}</div>
-    <div class="col-md-3 col-sm-4 col-xs-6 text-center" ng-repeat="user in group.users | filter:search">
-        <img src="{{user.photoUrl}}">
+<a href="#/groups/new" class="btn btn-info">Добавить группу</a> <a href="#/users/new" class="btn btn-info">Добавить пользователя</a>
+<hr>
+<div class="row" ng-repeat="group in groups"><!--ng-show="(group.users | filter:search).length" -->
+    <div class="text-center">{{group.name}}
+        <a href="#/groups/{{group.id}}/edit" class="btn btn-info"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+        <button ng-hide="(group.users | filter:search).length" class="btn btn-danger" ng-click="deleteGroup($index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+    </div>
+    <div class="col-md-3 col-sm-4 col-xs-6 text-center" ng-repeat="user in group.users | filter:search | orderBy:'-secondName' ">
+    <a href="#/users/{{user.id}}">
+        <img ng-src="{{user.photoUrl}}">
         <p>{{user.firstName}} {{user.secondName}}</p>
+    </a>
     </div>
 </div>

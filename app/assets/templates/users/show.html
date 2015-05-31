@@ -1,0 +1,10 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="#/users/{{user.id}}">Информация</a></li>
+    <li role="presentation"><a href="#/users/{{user.id}}/edit">Редактирование</a></li>
+</ul>
+<br>
+<img src="{{user.photoUrl}}">
+<h1>{{user.firstName}} {{user.secondName}}</h1>
+<h3>Группа: {{user.group.name}}</h3>
+<p>Стоимость часа: {{user.costPerHour}}</p>
+<p ng-if="user.phone">Телефон: {{user.phone}}</p>
