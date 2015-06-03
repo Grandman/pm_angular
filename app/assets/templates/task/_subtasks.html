@@ -1,0 +1,11 @@
+<ul>
+    <li>
+        <a href="{{location + '/' + task.id}}">{{task.title}}</a>
+        <p>Комментариев 0</p>
+        <div>
+            <ul  ng-repeat="task in task.children | filter:search.title track by task.id">
+                <div ng-include="'task/_subtasks.html'"></div>
+            </ul>
+        </div>
+    </li>
+</ul>

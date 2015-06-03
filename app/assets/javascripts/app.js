@@ -24,6 +24,14 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'task/show.html',
                 controller: 'TaskController'
             });
+            $routeProvider.when('/projects/:projectId/tasks/:taskId/comments', {
+                templateUrl: 'task/comments.html',
+                controller: 'CommentsController'
+            });
+            $routeProvider.when('/projects/:id/tasks/:parentId/new', {
+                templateUrl: 'task/new.html',
+                controller: 'TaskController'
+            });
             $routeProvider.when('/projects/:id/tasks/:taskId/edit', {
                 templateUrl: 'task/edit.html',
                 controller: 'TaskController'
@@ -63,6 +71,11 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
        .factory('Task', ['railsResourceFactory', function (railsResourceFactory) {
            return railsResourceFactory({url: '/api/projects/{{projectId}}/tasks/{{id}}', name: 'task'});
        }])
+        .factory('Comment', ['railsResourceFactory', function (railsResourceFactory) {
+            return railsResourceFactory({
+                url: '/api/projects/{{projectId}}/tasks/{{taskId}}/comments',
+                name: 'comment'});
+        }])
        .factory('User', ['railsResourceFactory', function (railsResourceFactory) {
            return railsResourceFactory({url: '/api/users', name: 'user'});
        }])
@@ -155,9 +168,18 @@ angular.module('controllers', [])
             var timer;
             $scope.projectId = $routeParams.id;
             $scope.location = $location.absUrl();
+            $scope.childrenHide = [];
             Task.get({projectId: $scope.projectId}).then(function(tasks){
                 $scope.tasks = tasks;
+                $scope.tasks.forEach(function(item, i, arr) {
+                    $scope.childrenHide[item.id]=false;
+                });
+                console.log($scope.childrenHide);
             });
+            $scope.showSubtasks = function(id){
+                $scope.childrenHide[id]=true;
+            };
+
             function myLoop(){
                 timer = $timeout(
                     function() {
@@ -165,6 +187,7 @@ angular.module('controllers', [])
                     },
                     1000
                 );
+                console.log($scope.childrenHide);
                 timer.then(
                     function() {
                         console.log( "Timer resolved!");
@@ -202,13 +225,57 @@ angular.module('controllers', [])
                 $scope.taskId = $routeParams.taskId;
                 Task.get({ projectId: $scope.projectId, id: $scope.taskId}).then(function(task){
                     $scope.task = task;
+                    console.log($scope.task)
                 });
             }
             else{
                 $scope.task = new Task({projectId: $scope.projectId});
             }
+            if ($routeParams.parentId) {
+                console.log($routeParams.parentId);
+                $scope.task.parent = $routeParams.parentId;
+            }
 
             $scope.createTask = function(){
+
+                $scope.task.create();
+                $location.path("/projects/" + $scope.projectId + "/tasks/");
+            };
+            $scope.updateTask = function(){
+                $scope.task.update();
+                $location.path('/projects/' + $scope.projectId + '/tasks/')
+            };
+            $scope.tasksUrl = $location.absUrl() + "/tasks";
+        }])
+        .controller("CommentsController", ['$scope', '$routeParams', '$location', 'Project', 'Task', 'Comment', 'User', function ($scope, $routeParams, $location, Project, Task, Comment, User) {
+            $scope.projectId = $routeParams.projectId;
+            console.log($routeParams);
+            $scope.taskId = $routeParams.taskId;
+            $scope.newComment = new Comment({projectId: $scope.projectId, taskId: $scope.taskId});
+            Comment.get({ projectId: $routeParams.projectId, taskId: $scope.taskId}).then(function(comments){
+                $scope.comments = comments;
+            });
+
+            $scope.AddComment = function(parentComment, user_id){
+                $scope.newComment.parent = parentComment.id;
+                $scope.newComment.user_id = user_id;
+                $scope.newComment.create({}, {projectId: $scope.projectId, taskId: $scope.taskId});
+                $scope.newComment = new Comment();
+                $scope.addingComment = [];
+                Comment.get({ projectId: $routeParams.projectId, taskId: $scope.taskId}).then(function(comments){
+                    $scope.comments = comments;
+                });
+            };
+            User.get({}, {onlyUsers: true}).then(function(users){
+                $scope.users = users;
+                $scope.UserGet = function(id){
+                    return _.find(users,function(rw){ return rw.id == id });
+                };
+            });
+
+
+            $scope.createTask = function(){
+
                 $scope.task.create();
                 $location.path("/projects/" + $scope.projectId + "/tasks/");
             };

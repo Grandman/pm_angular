@@ -1,3 +1,25 @@
+<ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="#/projects/{{projectId}}/{{task.id}}/">Основная информация</a></li>
+    <li role="presentation"><a href="#/projects/{{projectId}}/{{task.id}}/users">Участники</a></li>
+    <li role="presentation"><a href="#/projects/{{projectId}}/tasks/{{task.id}}/comments">Обсуждение</a></li>
+    <li role="presentation"><a href="#">Настройки</a></li>
+</ul>
 <h1>{{task.title}}</h1>
 <p>Описание:{{task.description}}</p>
-Комментарии:
+<div ng-if="task.subtasks.length > 0">
+    <strong>Подзадачи</strong>
+    <div class="row">
+        <div class="col-md-4">
+            <ul ng-repeat="task in task.subtasks | filter:search.title track by task.id">
+                <div ng-include="'task/_subtasks.html'"></div>
+            </ul>
+        </div>
+        <div class="col-md-4">
+            <div class="input-group">
+                <input type="text" class="form-control" id="search" ng-model="search.title">
+                <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
+            </div>
+        </div>
+    </div>
+
+</div>

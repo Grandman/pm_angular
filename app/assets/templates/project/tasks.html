@@ -11,15 +11,17 @@
 <hr>
 <a href="{{location + '/new'}}" class="btn btn-info">Добавить задачу</a>
 <hr>
-<table class="table table-hover">
-    <tr><th>Название</th><th>Управление</th></tr>
-    <tr ng-repeat="task in tasks | filter:search">
-        <td>
+<ul ng-repeat="task in tasks | filter:search track by task.id">
+    <ul>
+        <li>
             <a href="{{location + '/' + task.id}}">{{task.title}}</a>
-        </td>
-        <td>
-            <button class="btn btn-info" ng-click="saveProject($index);">Редактировать</button>
-            <a href="#/index">aaaa</a>
-        </td>
-    </tr>
-</table>
+            <button class="btn btn-info" ng-click="saveProject($index);">Комментариев 0</button>
+            <button class="btn btn-info" ng-click="showSubtasks(task.id);">Подзадач {{task.children.length}}</button>
+            <div ng-show="childrenHide[task.id]">
+                <ul  ng-repeat="task in task.subtasks | filter:search.title track by task.id">
+                    <div ng-include="'project/_task_item.html'"></div>
+                </ul>
+            </div>
+        </li>
+    </ul>
+</ul>

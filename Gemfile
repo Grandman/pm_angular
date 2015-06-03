@@ -33,6 +33,8 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
+gem 'ancestry'
+
 gem 'coveralls', require: false
 
 gem 'factory_girl_rails'
