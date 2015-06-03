@@ -1,0 +1,53 @@
+<ul class="nav nav-tabs">
+    <li role="presentation"><a href="#/projects/{{projectId}}/{{task.id}}/">Основная информация</a></li>
+    <li role="presentation"><a href="#/projects/{{projectId}}/{{task.id}}/users">Участники</a></li>
+    <li role="presentation" class="active"><a href="#/projects/{{projectId}}/tasks/{{task.id}}/comments">Обсуждение</a></li>
+    <li role="presentation"><a href="#">Настройки</a></li>
+</ul>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>User Comment Example</h3>
+        </div><!-- /col-sm-12 -->
+    </div><!-- /row -->
+    <div class="container" ng-repeat="comment in comments track by comment.id">
+        <div class="row">
+            <div class="col-sm-1">
+                <div class="thumbnail">
+                    <img class="img-responsive user-photo" ng-src="{{UserGet(comment.userId).photoUrl}}">
+                </div><!-- /thumbnail -->
+            </div><!-- /col-sm-1 -->
+
+            <div class="col-sm-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>{{UserGet(comment.userId).firstName}}</strong> <span class="text-muted">commented 5 days ago</span> <span class="text-right"><a href ng-click="addingComment[comment.id] = true;">Ответить</a></span>
+                    </div>
+                    <div class="panel-body">
+                        {{comment.text}}
+                    </div><!-- /panel-body -->
+                </div><!-- /panel panel-default -->
+            </div><!-- /col-sm-5 -->
+        </div>
+        <div class="row" ng-show="addingComment[comment.id]">
+            <div class="col-sm-1">
+                <div class="thumbnail">
+                    <img class="img-responsive user-photo" ng-src="{{UserGet(comment.userId).photoUrl}}">
+                </div><!-- /thumbnail -->
+            </div><!-- /col-sm-1 -->
+
+            <div class="col-sm-5">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <strong>{{UserGet(comment.userId).firstName}}</strong> <span class="text-muted">commented 5 days ago</span>
+                    </div>
+                    <div class="panel-body">
+                        <textarea class="form-control" rows="3"></textarea>
+                        <button ng-click="AddComment(comment, 1)" type="submit" class="btn btn-default">Ответить</button>
+                    </div><!-- /panel-body -->
+                </div><!-- /panel panel-default -->
+            </div><!-- /col-sm-5 -->
+        </div>
+        <div class="container" ng-repeat="comment in comment.subcomments track by comment.id" ng-include="'task/_subcomments.html'"></div>
+    </div>
+</div><!-- /container -->

@@ -1,0 +1,12 @@
+<ul>
+    <li>
+        <a href="{{location + '/' + task.id}}">{{task.title}}</a>
+        <button class="btn btn-info" ng-click="saveProject($index);">Комментариев 0</button>
+        <button class="btn btn-info" ng-click="showSubtasks(task.id);">Подзадач {{task.children.length}}</button>
+        <div ng-show="childrenHide[task.id]">
+            <ul  ng-repeat="task in task.children | filter:search.title track by task.id">
+                <div ng-include="'project/_task_item.html'"></div>
+            </ul>
+        </div>
+    </li>
+</ul>

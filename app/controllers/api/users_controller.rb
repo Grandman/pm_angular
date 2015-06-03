@@ -1,6 +1,9 @@
 class Api::UsersController < Api::ApplicationController
   def index
-    p params
+    if params[:only_users]
+      render json: User.all
+      return
+    end
     if params[:project_id]
       render json: Group.includes(users: :tasks).where( tasks: { project_id: params[:project_id]}).to_json(include: :users)
     else
