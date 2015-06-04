@@ -1,7 +1,7 @@
 <ul class="nav nav-tabs">
     <li role="presentation"><a href="#/projects/{{projectId}}/tasks/{{taskId}}/">Основная информация</a></li>
     <li role="presentation" class="active"><a href="#/projects/{{projectId}}/tasks/{{taskId}}/comments">Обсуждение</a></li>
-    <li role="presentation"><a href="#/projects/{{projectId}}/tasks/{{taskId}}/edit">Редактирование</a></li>
+    <li role="presentation" ng-show="$root.loggedUser.manager"><a href="#/projects/{{projectId}}/tasks/{{taskId}}/edit">Редактирование</a></li>
 </ul>
 <div class="container">
     <div class="row">

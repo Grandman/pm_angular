@@ -36,6 +36,6 @@ module UserAuthorization
 
   def authenticate_user!
     return if signed_in?
-    redirect_to login_path
+    redirect_to "#/login"
   end
 end

@@ -312,8 +312,12 @@ angular.module('controllers', [])
 
             $scope.createTask = function(){
                 $scope.task.userId = $scope.task.user.id;
-                $scope.task.create();
-                $location.path("/projects/" + $scope.projectId + "/tasks/");
+                $scope.task.create().then(function(success){
+                    $location.path("/projects/" + $scope.projectId + "/tasks/");
+                },function(error){
+                    $scope.errors = "Не заполнены все поля";
+                });
+
             };
             $scope.updateTask = function(){
                 $scope.task.update();
@@ -486,6 +490,7 @@ angular.module('controllers', [])
                     $scope.group.companyId = company.id;
                     $rootScope.company = company;
                     $scope.group.create().then(function(group){
+                        $scope.user.manager = true;
                         $scope.user.groupId = group.id;
                         $scope.user.companyId = company.id;
                         $scope.user.create().then(function(data){

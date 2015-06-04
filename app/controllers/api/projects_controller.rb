@@ -1,5 +1,5 @@
 class Api::ProjectsController < Api::ApplicationController
-
+  skip_before_action :authenticate_user!
   def index
     render json: Project.where(company_id: params[:company_id]).to_json(methods: [:tasks_count, :tasks_finished_count])
   end

@@ -2,7 +2,7 @@
     <li role="presentation"><a href="#/projects/{{project.id}}">Основная информация</a></li>
     <li role="presentation"><a href="{{tasksUrl}}">Задачи</a></li>
     <li role="presentation"><a href="#/projects/{{project.id}}/users">Участники</a></li>
-    <li role="presentation" class="active"><a href="#/projects/{{project.id}}/edit">Настройки</a></li>
+    <li role="presentation" ng-show="$root.loggedUser.manager" class="active"><a href="#/projects/{{project.id}}/edit">Настройки</a></li>
 </ul>
 <form>
     <div class="form-group">

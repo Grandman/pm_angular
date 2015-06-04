@@ -1,4 +1,5 @@
 class Api::GroupsController < Api::ApplicationController
+  skip_before_action :authenticate_user!
   def index
     render json: Group.where(company_id: params[:company_id]).to_json(include: :users)
   end

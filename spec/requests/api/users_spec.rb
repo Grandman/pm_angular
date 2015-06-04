@@ -2,6 +2,7 @@ require 'rails_helper'
 
 RSpec.describe 'users', type: :request do
   context 'user show' do
+    let!(:company){ create :company, id: 1 }
     let!(:user) { create :user, id: 1 }
     it 'render page' do
       get "/api/users/1"
@@ -9,6 +10,7 @@ RSpec.describe 'users', type: :request do
     end
   end
   context 'user create' do
+    let!(:company){ create :company, id: 1 }
     let(:user_attributes) { attributes_for :user}
     it 'success if valid user' do
       post "/api/users/", user: user_attributes
@@ -22,6 +24,7 @@ RSpec.describe 'users', type: :request do
   end
 
   context 'user update' do
+    let!(:company){ create :company, id: 1 }
     let!(:user) { create :user, id: 1 }
     let!(:user_attributes) { attributes_for :user }
     it 'success if valid user params' do

@@ -2,7 +2,7 @@
     <li role="presentation"><a href="#/projects/{{projectId}}/">Основная информация</a></li>
     <li role="presentation"><a href="{{tasksUrl}}">Задачи</a></li>
     <li role="presentation" class="active"><a href="#/projects/{{projectId}}/users">Участники</a></li>
-    <li role="presentation"><a href="#/projects/{{projectId}}/edit">Настройки</a></li>
+    <li role="presentation" ng-show="$root.loggedUser.manager"><a href="#/projects/{{projectId}}/edit">Настройки</a></li>
 </ul>
 <div class="input-group">
     <input type="text" class="form-control" id="search" ng-model="query">

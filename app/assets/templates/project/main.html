@@ -2,6 +2,10 @@
     <li role="presentation" class="active"><a href="#/projects/{{project.id}}">Основная информация</a></li>
     <li role="presentation"><a href="{{tasksUrl}}">Задачи</a></li>
     <li role="presentation"><a href="#/projects/{{project.id}}/users">Участники</a></li>
-    <li role="presentation"><a href="#/projects/{{project.id}}/edit">Настройки</a></li>
+    <li role="presentation" ng-show="$root.loggedUser.manager"><a href="#/projects/{{project.id}}/edit">Настройки</a></li>
 </ul>
-Продолжительность проекта: с {{project.startDate | date : 'short'}} по {{project.endTime | date : 'short'}}
+Продолжительность проекта: с {{project.startDate | date : 'short'}} по {{project.endTime | date : 'short'}}<br>
+Планируемые затраты времени на проект:{{project.planHours}} ч<br>
+Фактические затраты времени на проект:{{project.actualHours}} ч<br>
+Планируемые денежные затраты на проект:{{project.planCost}} руб<br>
+Фактические денежные затраты на проект:{{project.actualCost}} руб<br>

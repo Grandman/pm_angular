@@ -1,4 +1,5 @@
 class Api::CommentsController < Api::ApplicationController
+  skip_before_action :authenticate_user!
   def show
     render json: Comment.find(params[:id], include: :user).to_json(methods: [:subcomments], include: :user)
   end

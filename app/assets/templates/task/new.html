@@ -2,7 +2,6 @@
     <div class="form-group">
         <label for="title">Название</label>
         <input type="text" class="form-control" id="title" placeholder="Введите название" ng-model="task.title">
-        {{task.title}}
     </div>
     <div class="form-group">
         <label for="description">Описание</label>
@@ -19,6 +18,10 @@
             <div ng-bind-html="user.secondName | highlight: $select.search"></div>
         </ui-select-choices>
     </ui-select>
-
+    <div class="form-group">
+        <label for="planHours">Планируемое количество часов на задачу</label>
+        <input type="number" class="form-control" id="planHours" placeholder="Введите описание" ng-model="task.planHours">
+    </div>
+    {{errors}}
     <button type="submit" class="btn btn-default" ng-click="createTask();">Добавить</button>
 </form>

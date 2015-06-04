@@ -1,4 +1,5 @@
 class Api::UsersController < Api::ApplicationController
+  skip_before_action :authenticate_user!
   def index
     if params[:only_users]
       render json: User.where(company_id: params[:company_id])
@@ -43,6 +44,6 @@ class Api::UsersController < Api::ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url, :company_id, :finished_task_count)
+    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url, :company_id, :finished_task_count, :manager)
   end
 end

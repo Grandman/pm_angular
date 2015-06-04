@@ -15,6 +15,7 @@ RSpec.describe 'projects', type: :request do
     end
   end
   context 'project create' do
+    let!(:company){ create :company, id: 1 }
     let(:project_attributes) { attributes_for :project }
     it 'success if valid project' do
       post "/api/projects/", project: project_attributes
@@ -22,11 +23,12 @@ RSpec.describe 'projects', type: :request do
     end
 
     it 'error if not valid' do
-      post "/api/projects/", project: { test: 'test' }
+      post "/api/projects/", project: { test: 'test', company_id: 1 }
       expect(response).to have_http_status(422)
     end
   end
   context 'project update' do
+    let!(:company){ create :company, id: 1 }
     let!(:project) { create :project }
     let(:project_attributes) { attributes_for :project }
     it 'success if valid project' do
@@ -41,6 +43,7 @@ RSpec.describe 'projects', type: :request do
   end
 
   context 'project destroy' do
+    let!(:company){ create :company, id: 1 }
     let!(:project) { create :project }
     it 'success delete' do
       delete "/api/projects/1"

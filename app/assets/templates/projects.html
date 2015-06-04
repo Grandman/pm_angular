@@ -6,7 +6,7 @@
 </div>
 <div class="row">
     <hr>
-    <a href="{{location + '/new'}}" class="btn btn-info">Добавить проект</a>
+    <a ng-show="$root.loggedUser.manager" href="{{location + '/new'}}" class="btn btn-info">Добавить проект</a>
     <hr>
     <table class="table table-hover">
         <tr><th>Название</th><th>Управление</th></tr>
