@@ -15,8 +15,7 @@
                 <a href="{{location + '/' + project.id}}">{{project.title}}</a>
             </td>
             <td>
-                <button class="btn btn-info" ng-click="saveProject($index);">Редактировать</button>
-                <a href="#/index">aaaa</a>
+                <p>Выполнено задач {{project.tasksFinishedCount}} из {{project.tasksCount}}</p>
             </td>
         </tr>
     </table>

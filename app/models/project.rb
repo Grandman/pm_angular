@@ -4,4 +4,11 @@ class Project < ActiveRecord::Base
   belongs_to :company
 
   validates :title, :description, presence: true
+
+  def tasks_count
+    self.tasks.count
+  end
+  def tasks_finished_count
+    self.tasks.where(finished: true).count
+  end
 end

@@ -4,6 +4,10 @@
     "angular": "latest",
     "angular-route": "latest",
     "angular-resource": "latest",
+    "angular-cookies": "latest",
+    "angular-sanitize": "latest",
+    "angular-bootstrap": "latest",
+    "angular-ui-select": "latest",
     "bootstrap-sass-official": "latest"
   }
 }

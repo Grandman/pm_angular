@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150603095022) do
+ActiveRecord::Schema.define(version: 20150604000247) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,8 @@ ActiveRecord::Schema.define(version: 20150603095022) do
     t.integer  "plan_hours"
     t.integer  "actual_hours"
     t.integer  "company_id"
+    t.integer  "plan_cost"
+    t.boolean  "finished"
   end
 
   add_index "projects", ["company_id"], name: "index_projects_on_company_id", using: :btree
@@ -78,13 +80,14 @@ ActiveRecord::Schema.define(version: 20150603095022) do
     t.string   "title"
     t.string   "description"
     t.integer  "project_id"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.datetime "start_date"
     t.datetime "end_time"
     t.integer  "plan_hours"
     t.integer  "actual_hours"
     t.string   "ancestry"
+    t.boolean  "finished",     default: false
   end
 
   add_index "tasks", ["ancestry"], name: "index_tasks_on_ancestry", using: :btree
@@ -107,6 +110,7 @@ ActiveRecord::Schema.define(version: 20150603095022) do
     t.string   "photo_url"
     t.integer  "cost_per_hour"
     t.string   "phone"
+    t.integer  "company_id"
   end
 
   add_foreign_key "comments", "tasks"

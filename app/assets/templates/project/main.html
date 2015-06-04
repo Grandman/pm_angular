@@ -2,6 +2,6 @@
     <li role="presentation" class="active"><a href="#/projects/{{project.id}}">Основная информация</a></li>
     <li role="presentation"><a href="{{tasksUrl}}">Задачи</a></li>
     <li role="presentation"><a href="#/projects/{{project.id}}/users">Участники</a></li>
-    <li role="presentation"><a href="#">Настройки</a></li>
+    <li role="presentation"><a href="#/projects/{{project.id}}/edit">Настройки</a></li>
 </ul>
-Какая то основная информация
+Продолжительность проекта: с {{project.startDate | date : 'short'}} по {{project.endTime | date : 'short'}}

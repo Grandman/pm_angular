@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
+    resource :sessions
+    resources :companies
     resources :projects do
       resources :tasks do
         resources :comments

@@ -1,4 +1,8 @@
 asset 'angular'
 asset 'angular-route'
 asset 'angular-resource'
+asset 'angular-cookies'
+asset 'angular-sanitize'
+asset 'angular-bootstrap'
+asset 'angular-ui-select'
 asset 'bootstrap-sass-official'

@@ -1,4 +1,4 @@
-angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
+angular.module('pm', ['templates','ngRoute','controllers', 'rails', 'ngCookies', 'ui.select', 'ngSanitize', 'ui.bootstrap'])
        .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/projects', {
                 templateUrl: 'projects.html',
@@ -15,6 +15,10 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
             $routeProvider.when('/projects/:id/tasks', {
                 templateUrl: 'project/tasks.html',
                 controller: 'TasksController'
+            });
+            $routeProvider.when('/projects/:id/edit', {
+                templateUrl: 'project/edit.html',
+                controller: 'ProjectController'
             });
             $routeProvider.when('/projects/:id/tasks/new', {
                 templateUrl: 'task/new.html',
@@ -34,6 +38,10 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
             });
             $routeProvider.when('/projects/:id/tasks/:taskId/edit', {
                 templateUrl: 'task/edit.html',
+                controller: 'TaskController'
+            });
+            $routeProvider.when('/projects/:id/tasks/:taskId/close', {
+                templateUrl: 'task/close.html',
                 controller: 'TaskController'
             });
             $routeProvider.when('/projects/:project_id/users', {
@@ -64,7 +72,61 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
                 templateUrl: 'groups/edit.html',
                 controller: 'GroupController'
             });
+            $routeProvider.when('/login', {
+                templateUrl: 'login.html',
+                controller: 'LoginController'
+            });
+            $routeProvider.when('/register', {
+                templateUrl: 'register.html',
+                controller: 'RegisterController'
+            });
+            $routeProvider.when('/reports', {
+                templateUrl: 'reports.html',
+                controller: 'ReportController'
+            });
        }])
+        .run(function($rootScope, $location) {
+            $rootScope.$on( "$routeChangeStart", function(event, next, current) {
+                if ( $rootScope.loggedUser == null ) {
+                    if ( next.templateUrl == "login.html" || next.templateUrl == "register.html" ) {
+
+                    } else {
+                        $location.path( "/login" );
+                    }
+                }
+
+            });
+        })
+        .filter('propsFilter', function() {
+            return function(items, props) {
+                var out = [];
+
+                if (angular.isArray(items)) {
+                    items.forEach(function(item) {
+                        var itemMatches = false;
+
+                        var keys = Object.keys(props);
+                        for (var i = 0; i < keys.length; i++) {
+                            var prop = keys[i];
+                            var text = props[prop].toLowerCase();
+                            if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                                itemMatches = true;
+                                break;
+                            }
+                        }
+
+                        if (itemMatches) {
+                            out.push(item);
+                        }
+                    });
+                } else {
+                    // Let the output be the input untouched
+                    out = items;
+                }
+
+                return out;
+            };
+        })
        .factory('Project', ['railsResourceFactory', function (railsResourceFactory) {
             return railsResourceFactory({url: '/api/projects', name: 'project'});
        }])
@@ -79,15 +141,18 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails'])
        .factory('User', ['railsResourceFactory', function (railsResourceFactory) {
            return railsResourceFactory({url: '/api/users', name: 'user'});
        }])
+        .factory('Company', ['railsResourceFactory', function (railsResourceFactory) {
+            return railsResourceFactory({url: '/api/companies', name: 'company'});
+        }])
         .factory('Group', ['railsResourceFactory', function (railsResourceFactory) {
             return railsResourceFactory({url: '/api/groups', name: 'group'});
         }]);
 
 angular.module('controllers', [])
-       .controller("ProjectsController", ['$scope', '$timeout', '$location', 'Project', function ($scope, $timeout, $location, Project) {
+       .controller("ProjectsController", ['$scope', '$rootScope', '$timeout', '$location', 'Project', function ($scope, $rootScope, $timeout, $location, Project) {
         var timer;
         $scope.location = $location.absUrl();
-        Project.get().then(function(projects){
+        Project.get({},{companyId: $rootScope.company.id}).then(function(projects){
             $scope.projects = projects;
         });
         function myLoop(){
@@ -100,7 +165,7 @@ angular.module('controllers', [])
             timer.then(
                 function() {
                     console.log( "Timer resolved!");
-                    Project.get().then(function(projects){
+                    Project.get({},{companyId: $rootScope.company.id}).then(function(projects){
                         if(!angular.equals($scope.projects, projects))
                             $scope.projects = projects;
                         myLoop();
@@ -140,7 +205,7 @@ angular.module('controllers', [])
 
 
        }])
-       .controller("ProjectController", ['$scope', '$routeParams', '$location', 'Project', function ($scope, $routeParams, $location, Project) {
+       .controller("ProjectController", ['$scope', '$rootScope', '$routeParams', '$location', 'Project', function ($scope, $rootScope, $routeParams, $location, Project) {
             if($routeParams.id){
                 $scope.id = $routeParams.id;
             }
@@ -154,6 +219,7 @@ angular.module('controllers', [])
                 $scope.project = new Project();
             }
             $scope.createProject = function(){
+                $scope.project.companyId = $rootScope.company.id;
                 $scope.project.create();
                 $location.path("/projects");
             };
@@ -218,7 +284,7 @@ angular.module('controllers', [])
             };
             myLoop();
         }])
-        .controller("TaskController", ['$scope', '$routeParams', '$location', 'Project', 'Task', function ($scope, $routeParams, $location, Project, Task) {
+        .controller("TaskController", ['$scope', '$rootScope', '$routeParams', '$location', 'Project', 'Task', 'User', function ($scope, $rootScope, $routeParams, $location, Project, Task, User) {
             $scope.projectId = $routeParams.id;
             console.log($routeParams);
             if($routeParams.taskId){
@@ -235,9 +301,17 @@ angular.module('controllers', [])
                 console.log($routeParams.parentId);
                 $scope.task.parent = $routeParams.parentId;
             }
+            User.get({}, {onlyUsers: true, companyId: $rootScope.company.id}).then(function(users){
+                $scope.users = users;
+                console.log($scope.users);
+                //$scope.UserGet = function(id){
+                //    return _.find(users,function(rw){ return rw.id == id });
+                //};
+            });
+            $scope.taskUser = null;
 
             $scope.createTask = function(){
-
+                $scope.task.userId = $scope.task.user.id;
                 $scope.task.create();
                 $location.path("/projects/" + $scope.projectId + "/tasks/");
             };
@@ -245,28 +319,39 @@ angular.module('controllers', [])
                 $scope.task.update();
                 $location.path('/projects/' + $scope.projectId + '/tasks/')
             };
+            $scope.closeTask = function(){
+                $scope.task.finished = true;
+                $scope.task.update();
+                $location.path('/projects/' + $scope.projectId + '/tasks/')
+            };
             $scope.tasksUrl = $location.absUrl() + "/tasks";
         }])
-        .controller("CommentsController", ['$scope', '$routeParams', '$location', 'Project', 'Task', 'Comment', 'User', function ($scope, $routeParams, $location, Project, Task, Comment, User) {
+        .controller("CommentsController", ['$scope', '$rootScope', '$routeParams', '$location', 'Project', 'Task', 'Comment', 'User', function ($scope, $rootScope, $routeParams, $location, Project, Task, Comment, User) {
             $scope.projectId = $routeParams.projectId;
-            console.log($routeParams);
+            $scope.addingComment = [];
             $scope.taskId = $routeParams.taskId;
-            $scope.newComment = new Comment({projectId: $scope.projectId, taskId: $scope.taskId});
+            $scope.newComment = new Comment({projectId: $routeParams.projectId, taskId: $routeParams.taskId});
             Comment.get({ projectId: $routeParams.projectId, taskId: $scope.taskId}).then(function(comments){
                 $scope.comments = comments;
             });
 
             $scope.AddComment = function(parentComment, user_id){
-                $scope.newComment.parent = parentComment.id;
+                console.log($rootScope.loggedUser);
+                console.log($rootScope.loggedUser.id);
+                if(parentComment){
+                    $scope.newComment.parent = parentComment.id;
+                    $scope.addingComment[parentComment.id] = false;
+                }
                 $scope.newComment.user_id = user_id;
-                $scope.newComment.create({}, {projectId: $scope.projectId, taskId: $scope.taskId});
-                $scope.newComment = new Comment();
-                $scope.addingComment = [];
+                $scope.newComment.create({projectId: $routeParams.projectId, taskId: $routeParams.taskId});
+                $scope.newComment = new Comment({projectId: $routeParams.projectId, taskId: $routeParams.taskId});
                 Comment.get({ projectId: $routeParams.projectId, taskId: $scope.taskId}).then(function(comments){
                     $scope.comments = comments;
                 });
             };
-            User.get({}, {onlyUsers: true}).then(function(users){
+            $scope.taskUsers = [];
+            $scope.users = [];
+            User.get({}, {onlyUsers: true, companyId: $rootScope.company.id}).then(function(users){
                 $scope.users = users;
                 $scope.UserGet = function(id){
                     return _.find(users,function(rw){ return rw.id == id });
@@ -285,17 +370,17 @@ angular.module('controllers', [])
             };
             $scope.tasksUrl = $location.absUrl() + "/tasks";
         }])
-        .controller("UsersController", ['$scope', '$routeParams', '$location', 'Project', 'Task', 'User', 'Group', function ($scope, $routeParams, $location, Project, Task, User, Group) {
+        .controller("UsersController", ['$scope', '$rootScope', '$routeParams', '$location', 'Project', 'Task', 'User', 'Group', function ($scope, $rootScope, $routeParams, $location, Project, Task, User, Group) {
             $scope.projectId = $routeParams.project_id;
             console.log($routeParams);
             if($scope.projectId){
-                User.get({},{projectId: $scope.projectId}).then(function(users){
+                User.get({},{projectId: $scope.projectId, companyId: $rootScope.company.id}).then(function(users){
                     $scope.groups = users;
                     console.log($scope.groups);
                 });
             }
             else{
-                User.get().then(function(users){
+                User.get({},{companyId: $rootScope.company.id}).then(function(users){
                     $scope.groups = users;
                     console.log($scope.groups);
                 });
@@ -322,7 +407,7 @@ angular.module('controllers', [])
             };
             $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
         }])
-        .controller("UserController", ['$scope', '$routeParams', '$location', 'User', 'Group', function ($scope, $routeParams, $location, User, Group) {
+        .controller("UserController", ['$scope', '$rootScope', '$routeParams', '$location', 'User', 'Group', function ($scope, $rootScope, $routeParams, $location, User, Group) {
             if($routeParams.user_id){
                 User.get($routeParams.user_id).then(function(user){
                     $scope.user = user;
@@ -331,10 +416,11 @@ angular.module('controllers', [])
             else{
                 $scope.user = new User();
             }
-            Group.get().then(function(groups){
+            Group.get({}, {companyId: $rootScope.company.id}).then(function(groups){
                 $scope.groups = groups;
             });
             $scope.createUser = function(){
+                $scope.user.companyId = $rootScope.company.id;
                 $scope.user.create().then(function(user){
                     $location.path("users/"+ user.id)
                 });
@@ -350,7 +436,7 @@ angular.module('controllers', [])
             };
             $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
         }])
-        .controller("GroupController", ['$scope', '$routeParams', '$location', 'Group', function ($scope, $routeParams, $location, Group) {
+        .controller("GroupController", ['$scope', '$rootScope', '$routeParams', '$location', 'Group', function ($scope, $rootScope, $routeParams, $location, Group) {
             if($routeParams.group_id){
                Group.get($routeParams.group_id).then(function(group){
                    $scope.group = group;
@@ -360,6 +446,7 @@ angular.module('controllers', [])
                 $scope.group = new Group();
             }
             $scope.createGroup = function(){
+                $scope.group.companyId = $rootScope.company.id;
                 $scope.group.create();
                 $location.path("users/")
             };
@@ -368,4 +455,169 @@ angular.module('controllers', [])
                 $location.path("users/")
             };
         $scope.tasksUrl = "#/projects/" + $scope.projectId + "/tasks";
+        }])
+        .controller("LoginController", ['$scope', '$routeParams', '$location', '$http', '$rootScope', 'Group', 'User', 'Company', function ($scope, $routeParams, $location, $http, $rootScope, Group, User, Company) {
+            $scope.user = null;
+            $scope.Login = function(){
+                $http.post('/api/sessions', {email: $scope.email, password: $scope.password}).
+                    success(function(data, status, headers, config) {
+                        User.get(data.id).then(function(user){
+                            $rootScope.loggedUser = new User(user);
+                            $scope.user = new User(user);
+                            Company.get($scope.user.companyId).then(function(company){
+                                $rootScope.company = company;
+                            });
+                        });
+                        $location.path("/projects")
+                    }).
+                    error(function(data, status, headers, config) {
+                        $scope.error = data.errors;
+                    });
+            };
+        }])
+        .controller("RegisterController", ['$scope', '$routeParams', '$location', '$http', '$rootScope', 'Company', 'Group',  'User', function ($scope, $routeParams, $location, $http, $rootScope, Company, Group, User) {
+            $scope.company = new Company();
+            $scope.user = new User();
+            $scope.Register = function(){
+                $scope.company.create().then(function(company){
+                    $scope.group = new Group();
+                    $scope.group.name = "Менеджеры";
+                    $scope.group.costPerHour = 0;
+                    $scope.group.companyId = company.id;
+                    $rootScope.company = company;
+                    $scope.group.create().then(function(group){
+                        $scope.user.groupId = group.id;
+                        $scope.user.companyId = company.id;
+                        $scope.user.create().then(function(data){
+                            $rootScope.loggedUser = new User(data);
+                            $scope.user = new User(data);
+                            $location.path("/projects");
+                        }, function(error){
+                            $scope.errors = "Не удалось создать пользователя";
+                        })
+                    }, function(error){
+                        $scope.errors = "Не удалось создать группу";
+                    })
+                }, function(error){
+                    $scope.errors = "Не удалось создать компанию";
+                })
+            };
+        }])
+        .controller("ReportController", ['$scope', '$routeParams', '$location', '$http', '$rootScope', 'Company', 'Group',  'User', function ($scope, $routeParams, $location, $http, $rootScope, Company, Group, User) {
+        $scope.chartObject = {
+            "type": "LineChart",
+            "displayed": true,
+            "data": {
+                "cols": [
+                    {
+                        "id": "month",
+                        "label": "Month",
+                        "type": "string",
+                        "p": {}
+                    },
+                    {
+                        "id": "laptop-id",
+                        "label": "Laptop",
+                        "type": "number",
+                        "p": {}
+                    },
+                    {
+                        "id": "desktop-id",
+                        "label": "Desktop",
+                        "type": "number",
+                        "p": {}
+                    },
+                    {
+                        "id": "server-id",
+                        "label": "Server",
+                        "type": "number",
+                        "p": {}
+                    },
+                    {
+                        "id": "cost-id",
+                        "label": "Shipping",
+                        "type": "number"
+                    }
+                ],
+                "rows": [
+                    {
+                        "c": [
+                            {
+                                "v": "January"
+                            },
+                            {
+                                "v": 19,
+                                "f": "42 items"
+                            },
+                            {
+                                "v": 12,
+                                "f": "Ony 12 items"
+                            },
+                            {
+                                "v": 7,
+                                "f": "7 servers"
+                            },
+                            {
+                                "v": 4
+                            }
+                        ]
+                    },
+                    {
+                        "c": [
+                            {
+                                "v": "February"
+                            },
+                            {
+                                "v": 13
+                            },
+                            {
+                                "v": 1,
+                                "f": "1 unit (Out of stock this month)"
+                            },
+                            {
+                                "v": 10
+                            },
+                            {
+                                "v": 2
+                            }
+                        ]
+                    },
+                    {
+                        "c": [
+                            {
+                                "v": "March"
+                            },
+                            {
+                                "v": 24
+                            },
+                            {
+                                "v": 5
+                            },
+                            {
+                                "v": 11
+                            },
+                            {
+                                "v": 6
+                            }
+                        ]
+                    }
+                ]
+            },
+            "options": {
+                "title": "Sales per month",
+                "isStacked": "true",
+                "fill": 20,
+                "displayExactValues": true,
+                "vAxis": {
+                    "title": "Sales unit",
+                    "gridlines": {
+                        "count": 10
+                    }
+                },
+                "hAxis": {
+                    "title": "Date"
+                }
+            },
+            "formatters": {}
+        }
         }])

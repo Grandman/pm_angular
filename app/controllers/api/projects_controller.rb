@@ -1,7 +1,7 @@
 class Api::ProjectsController < Api::ApplicationController
 
   def index
-    render json: Project.all
+    render json: Project.where(company_id: params[:company_id]).to_json(methods: [:tasks_count, :tasks_finished_count])
   end
 
   def show
@@ -9,7 +9,7 @@ class Api::ProjectsController < Api::ApplicationController
   end
 
   def create
-    @project = Project.create(project_params)
+    @project = Company.find(params[:project][:company_id]).projects.create(project_params)
     if @project.valid?
       render json: @project, status: 200
     else
@@ -27,7 +27,7 @@ class Api::ProjectsController < Api::ApplicationController
   end
 
   def project_params
-    params.require(:project).permit(:title, :description)
+    params.require(:project).permit(:title, :description, :company_id, :start_date, :end_time)
   end
 
   def destroy

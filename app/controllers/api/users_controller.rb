@@ -1,13 +1,13 @@
 class Api::UsersController < Api::ApplicationController
   def index
     if params[:only_users]
-      render json: User.all
+      render json: User.where(company_id: params[:company_id])
       return
     end
     if params[:project_id]
-      render json: Group.includes(users: :tasks).where( tasks: { project_id: params[:project_id]}).to_json(include: :users)
+      render json: Group.where(company_id: params[:company_id]).includes(users: :tasks).where( tasks: { project_id: params[:project_id]}).to_json(include: :users)
     else
-      render json: Group.all.to_json(include: :users)
+      render json: Group.where(company_id: params[:company_id]).to_json(include: :users)
     end
   end
 
@@ -43,6 +43,6 @@ class Api::UsersController < Api::ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url)
+    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url, :company_id)
   end
 end

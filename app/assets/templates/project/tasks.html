@@ -2,7 +2,7 @@
     <li role="presentation"><a href="#/projects/{{projectId}}/">Основная информация</a></li>
     <li role="presentation" class="active"><a href="{{tasksUrl}}">Задачи</a></li>
     <li role="presentation"><a href="#/projects/{{projectId}}/users">Участники</a></li>
-    <li role="presentation"><a href="#">Настройки</a></li>
+    <li role="presentation"><a href="#/projects/{{projectId}}/edit">Настройки</a></li>
 </ul>
 <div class="input-group">
     <input type="text" class="form-control" id="search" ng-model="search.title">
@@ -14,13 +14,15 @@
 <ul ng-repeat="task in tasks | filter:search track by task.id">
     <ul>
         <li>
-            <a href="{{location + '/' + task.id}}">{{task.title}}</a>
-            <button class="btn btn-info" ng-click="saveProject($index);">Комментариев 0</button>
-            <button class="btn btn-info" ng-click="showSubtasks(task.id);">Подзадач {{task.children.length}}</button>
-            <div ng-show="childrenHide[task.id]">
-                <ul  ng-repeat="task in task.subtasks | filter:search.title track by task.id">
-                    <div ng-include="'project/_task_item.html'"></div>
-                </ul>
+            <a href="{{location + '/' + task.id}}">{{task.title}}</a> <button ng-if="task.finished" class="btn btn-success">Завершена</button>
+            <div ng-if="!task.finished">
+                <button class="btn btn-info" ng-click="saveProject($index);">Комментариев {{task.comments.length}}</button>
+                <button class="btn btn-info" ng-click="showSubtasks(task.id);">Подзадач {{task.subtasks.length}}</button>
+                <div ng-show="childrenHide[task.id]">
+                    <ul  ng-repeat="task in task.subtasks | filter:search.title track by task.id">
+                        <div ng-include="'project/_task_item.html'"></div>
+                    </ul>
+                </div>
             </div>
         </li>
     </ul>

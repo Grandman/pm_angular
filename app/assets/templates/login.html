@@ -1,0 +1,46 @@
+<div class="container col-md-6" >
+    <div class="row">
+        <div class="span12">
+            <div class="" id="loginModal">
+                <div class="modal-body">
+                    <div class="well">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#login" data-toggle="tab">Вход</a></li>
+                            <li><a href="#/register" data-toggle="tab">Добавить компанию</a></li>
+                        </ul>
+                        <div id="myTabContent" class="tab-content">
+                            <div class="tab-pane active in" id="login">
+                                <form class="form-horizontal">
+                                    <fieldset>
+                                        <div class="control-group">
+                                            <!-- Username -->
+                                            <label class="control-label"  for="email">Email</label>
+                                            <div class="controls">
+                                                <input type="text" id="email" name="username" placeholder="" class="input-xlarge" ng-model="email">
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <!-- Password-->
+                                            <label class="control-label" for="password">Password</label>
+                                            <div class="controls">
+                                                <input type="password" id="password" name="password" placeholder="" class="input-xlarge" ng-model="password">
+                                            </div>
+                                        </div>
+                                        {{error}}
+                                        <div class="control-group">
+                                            <!-- Button -->
+                                            <div class="controls">
+                                                <button class="btn btn-success" ng-click="Login();">Войти</button>
+                                            </div>
+                                        </div>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

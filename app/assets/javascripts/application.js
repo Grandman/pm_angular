@@ -15,6 +15,11 @@
 //= require underscore-min
 //= require angular/angular
 //= require angular-route/angular-route
+//= require angular-cookies/angular-cookies.min
+//= require angular-sanitize/angular-sanitize.min.js
+//= require angular-bootstrap/ui-bootstrap.min
+//= require angular-bootstrap/ui-bootstrap-tpls.min
+//= require angular-ui-select/dist/select.min
 //= require angular-rails-templates
 //= require angularjs/rails/resource
 //= require_tree ../templates

@@ -1,11 +1,13 @@
 <ul class="nav nav-tabs">
     <li role="presentation" class="active"><a href="#/projects/{{projectId}}/{{task.id}}/">Основная информация</a></li>
-    <li role="presentation"><a href="#/projects/{{projectId}}/{{task.id}}/users">Участники</a></li>
     <li role="presentation"><a href="#/projects/{{projectId}}/tasks/{{task.id}}/comments">Обсуждение</a></li>
-    <li role="presentation"><a href="#">Настройки</a></li>
+    <li role="presentation"><a href="#/projects/{{projectId}}/tasks/{{task.id}}/edit">Редактирование</a></li>
 </ul>
 <h1>{{task.title}}</h1>
 <p>Описание:{{task.description}}</p>
+<hr>
+<a href="#/projects/{{projectId}}/tasks/{{task.id}}/new" class="btn btn-info">Добавить подзадачу</a> <a ng-if="task.users[0].id == $root.loggedUser.id" href="#/projects/{{projectId}}/tasks/{{task.id}}/close" class="btn btn-success">Завершить</a>
+<hr>
 <div ng-if="task.subtasks.length > 0">
     <strong>Подзадачи</strong>
     <div class="row">

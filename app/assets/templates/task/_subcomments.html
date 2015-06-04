@@ -9,7 +9,9 @@
         <div class="col-sm-5">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong>{{UserGet(comment.userId).firstName}}</strong> <span class="text-muted">commented 5 days ago</span> <span class="text-right"><a href ng-click="addingComment[comment.id] = true;">Ответить</a></span>
+                    <strong>{{UserGet(comment.userId).firstName}}</strong>
+                    <!--<span class="text-muted">commented 5 days ago</span> -->
+                    <span class="text-right"><a href ng-click="addingComment[comment.id] = true;">Ответить</a></span>
                 </div>
                 <div class="panel-body">
                     {{comment.text}}
@@ -27,11 +29,12 @@
         <div class="col-sm-5">
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <strong>{{UserGet(comment.userId).firstName}}</strong> <span class="text-muted">commented 5 days ago</span>
+                    <strong>{{UserGet(comment.userId).firstName}}</strong>
+                    <!--<span class="text-muted">commented 5 days ago</span>-->
                 </div>
                 <div class="panel-body">
                     <textarea class="form-control" rows="3" ng-model="newComment.text"></textarea>
-                    <button ng-click="AddComment(comment, 1); addingComment[comment.id] = false;" type="submit" class="btn btn-default">Ответить</button>
+                    <button ng-click="AddComment(comment, $root.loggedUser.id); addingComment[comment.id] = false;" type="submit" class="btn btn-default">Ответить</button>
                 </div><!-- /panel-body -->
             </div><!-- /panel panel-default -->
         </div><!-- /col-sm-5 -->

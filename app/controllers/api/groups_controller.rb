@@ -1,16 +1,16 @@
 class Api::GroupsController < Api::ApplicationController
   def index
-    render json: Group.all.to_json(include: :users)
+    render json: Group.where(company_id: params[:company_id]).to_json(include: :users)
   end
 
   def show
-    render json: Group.find(params[:id])
+    render json: Group.find(params[:id]).to_json(include: :company)
   end
 
   def create
-    group = Group.create(group_params)
+    group = Company.find(params[:group][:company_id]).groups.create(group_params)
     if group.valid?
-      render json: 'ok', status: 200
+      render json: group, status: 200
     else
       render json: 'fail', status: 422
     end
@@ -35,6 +35,6 @@ class Api::GroupsController < Api::ApplicationController
   end
 
   def group_params
-    params.require(:group).permit(:name, :cost_per_hour)
+    params.require(:group).permit(:name, :cost_per_hour, :company_id)
   end
 end

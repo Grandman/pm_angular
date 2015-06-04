@@ -8,5 +8,17 @@
         <label for="description">Описание</label>
         <textarea class="form-control" id="description" placeholder="Введите описание" ng-model="task.description"></textarea>
     </div>
+    <ui-select ng-model="task.user"
+               theme="bootstrap"
+               ng-disabled="disabled"
+               reset-search-input="false"
+               style="width: 300px;">
+        <ui-select-match placeholder="Выберите сотрудника">{{$select.selected.firstName}} {{$select.selected.secondName}}</ui-select-match>
+        <ui-select-choices repeat="user in users | propsFilter: {firstName: $select.search, secondName: $select.search} track by $index">
+            <div ng-bind-html="user.firstName | highlight: $select.search"></div>
+            <div ng-bind-html="user.secondName | highlight: $select.search"></div>
+        </ui-select-choices>
+    </ui-select>
+
     <button type="submit" class="btn btn-default" ng-click="createTask();">Добавить</button>
 </form>
