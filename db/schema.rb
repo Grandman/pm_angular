@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150604081118) do
+ActiveRecord::Schema.define(version: 20150604214818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,14 +106,16 @@ ActiveRecord::Schema.define(version: 20150604081118) do
     t.string   "email"
     t.string   "password"
     t.integer  "group_id"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                                          null: false
+    t.datetime "updated_at",                                          null: false
     t.string   "photo_url"
     t.integer  "cost_per_hour"
     t.string   "phone"
     t.integer  "company_id"
     t.integer  "finished_task_count", default: 0
     t.boolean  "manager",             default: false
+    t.datetime "busy_from"
+    t.datetime "busy_to",             default: '2015-06-05 00:00:00'
   end
 
   add_foreign_key "comments", "tasks"

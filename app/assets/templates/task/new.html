@@ -7,21 +7,58 @@
         <label for="description">Описание</label>
         <textarea class="form-control" id="description" placeholder="Введите описание" ng-model="task.description"></textarea>
     </div>
-    <ui-select ng-model="task.user"
-               theme="bootstrap"
-               ng-disabled="disabled"
-               reset-search-input="false"
-               style="width: 300px;">
-        <ui-select-match placeholder="Выберите сотрудника">{{$select.selected.firstName}} {{$select.selected.secondName}}</ui-select-match>
-        <ui-select-choices repeat="user in users | propsFilter: {firstName: $select.search, secondName: $select.search} track by $index">
-            <div ng-bind-html="user.firstName | highlight: $select.search"></div>
-            <div ng-bind-html="user.secondName | highlight: $select.search"></div>
-        </ui-select-choices>
-    </ui-select>
+
     <div class="form-group">
         <label for="planHours">Планируемое количество часов на задачу</label>
         <input type="number" class="form-control" id="planHours" placeholder="Введите описание" ng-model="task.planHours">
     </div>
+    <div class="col-md-6 row">
+        <p>Дата начала задачи:</p>
+        <p class="input-group">
+            <input type="date" class="form-control" datepicker-popup ng-model="task.startDate" is-open="opened" min-date="'2015-06-04'" ng-required="true" close-text="Закрыть" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>Дата окончания задачи:</p>
+            <p class="input-group">
+                <input type="date" class="form-control" datepicker-popup ng-model="task.endTime" is-open="opened" min-date="task.startDate"  ng-required="true" close-text="Закрыть" />
+                  <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                  </span>
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <p>Выбор сотрудника на задачу:</p>
+                <ui-select ng-model="task.user"
+                           theme="bootstrap"
+                           ng-disabled="disabled"
+                           reset-search-input="false"
+                           style="width: 300px;">
+                    <ui-select-match placeholder="Выберите сотрудника">{{$select.selected.firstName}} {{$select.selected.secondName}}</ui-select-match>
+                    <ui-select-choices repeat="user in users | propsFilter: {firstName: $select.search, secondName: $select.search} track by $index">
+                        <div ng-bind-html="user.firstName | highlight: $select.search"></div>
+                        <div ng-bind-html="user.secondName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            <div class="form-group">
+            <label for="group">Группа</label>
+            <select id="group" ng-model="user.groupId"
+                    ng-options="group.id as group.name for group in groups">
+            </select>
+                <button type="button" class="btn btn-default" ng-click="GetUser();">Подобрать сотрудника</button>
+            </div>
+        </div>
+    </div>
     {{errors}}
-    <button type="submit" class="btn btn-default" ng-click="createTask();">Добавить</button>
+    <div class="row">
+        <div class="col-md-6">
+            <button type="submit" class="btn btn-default" ng-click="createTask();">Добавить</button>
+        </div>
+    </div>
 </form>

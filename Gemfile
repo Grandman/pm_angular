@@ -34,6 +34,7 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'capistrano-rails', group: :development
 
 gem 'ancestry'
+gem 'business_time'
 
 gem 'coveralls', require: false
 

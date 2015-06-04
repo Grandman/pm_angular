@@ -8,7 +8,11 @@ class Api::UsersController < Api::ApplicationController
     if params[:project_id]
       render json: Group.where(company_id: params[:company_id]).includes(users: :tasks).where( tasks: { project_id: params[:project_id]}).to_json(include: :users)
     else
-      render json: Group.where(company_id: params[:company_id]).to_json(include: :users)
+      if params[:start_date] && params[:end_time]
+        render json: Group.where(company_id: params[:company_id]).includes(:users).where( users: { busy_to: 5.years.ago..params[:start_date]}).to_json(include: :users)
+      else
+        render json: Group.where(company_id: params[:company_id]).to_json(include: :users)
+      end
     end
   end
 

@@ -21,7 +21,12 @@ class Api::TasksController < Api::ApplicationController
         all_plan_cost = @task.project.plan_cost
         all_plan_cost = 0 if all_plan_cost.nil?
 
-        @task.users << User.find(params[:task][:user_id])
+        days = (params[:task][:plan_hours] / 8) + 1
+        busy_to = days.business_days.after(Date.parse(params[:task][:start_date]))
+        user = User.find(params[:task][:user_id])
+        puts busy_to
+        user.update(busy_to: busy_to)
+        @task.users << user
         user_per_hour = @task.users.first.cost_per_hour
         @task.project.update(plan_hours: all_plan_hours+@task.plan_hours, plan_cost: all_plan_hours+(@task.plan_hours*user_per_hour))
       end
@@ -51,6 +56,6 @@ class Api::TasksController < Api::ApplicationController
   end
 
   def task_params
-    params.require(:task).permit(:title, :description, :project_id, :plan_hours, :actual_hours, :finished)
+    params.require(:task).permit(:title, :description, :project_id, :plan_hours, :actual_hours, :finished, :start_date, :end_time)
   end
 end

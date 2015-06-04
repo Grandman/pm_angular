@@ -50,6 +50,9 @@ GEM
       debug_inspector (>= 0.0.1)
     bower-rails (0.9.2)
     builder (3.2.2)
+    business_time (0.7.4)
+      activesupport (>= 3.1.0)
+      tzinfo
     byebug (5.0.0)
       columnize (= 0.9.0)
     capybara (2.4.4)
@@ -244,6 +247,7 @@ DEPENDENCIES
   angular_rails_csrf
   angularjs-rails-resource (~> 2.0.0)
   bower-rails
+  business_time
   byebug
   capybara
   codeclimate-test-reporter

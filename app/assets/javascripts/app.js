@@ -308,7 +308,27 @@ angular.module('controllers', [])
                 //    return _.find(users,function(rw){ return rw.id == id });
                 //};
             });
+            $scope.GetUser = function(){
+                User.get({}, {companyId: $rootScope.company.id, startDate: $scope.task.startDate, endTime: $scope.task.endTime}).then(function(groups){
+                    if(groups.length == 0){
+                        $scope.task.user = "";
+                        $scope.errors = "Нет подходящих групп"
+                    }
+                    else
+                    {
+                        if (groups[0].users.length == 0){
+                            $scope.task.user = "";
+                            $scope.errors = "Нет подходящих пользователей"
+                        }
+                        else{
+                            $scope.task.user = groups[0].users[0]
+                        }
+                    }
+
+                })
+            };
             $scope.taskUser = null;
+
 
             $scope.createTask = function(){
                 $scope.task.userId = $scope.task.user.id;
@@ -395,10 +415,8 @@ angular.module('controllers', [])
                 var query = $scope.query.toLowerCase(),
                     fullname = user.firstName.toLowerCase() + ' ' + user.secondName.toLowerCase();
 
-                if (fullname.indexOf(query) != -1) {
-                    return true;
-                }
-                return false;
+                return fullname.indexOf(query) != -1;
+
             };
             $scope.deleteGroup = function(index){
                 console.log($scope.groups[index]);
