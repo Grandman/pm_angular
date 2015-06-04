@@ -26,6 +26,10 @@ class Api::TasksController < Api::ApplicationController
   def update
     task = Task.find(params[:id])
     if task.update(task_params)
+      if params[:task][:finished]
+        task_count = task.users.first.finished_task_count
+        task.users.first.update(finished_task_count: task_count+1)
+      end
       render json: task, status: 200
     else
       render json: 'fail', status: 422

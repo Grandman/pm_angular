@@ -43,6 +43,6 @@ class Api::UsersController < Api::ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url, :company_id)
+    params.require(:user).permit(:first_name, :second_name, :login, :email, :password, :group_id, :cost_per_hour, :photo_url, :company_id, :finished_task_count)
   end
 end

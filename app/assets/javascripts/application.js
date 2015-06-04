@@ -17,6 +17,7 @@
 //= require angular-route/angular-route
 //= require angular-cookies/angular-cookies.min
 //= require angular-sanitize/angular-sanitize.min.js
+//= require angular-google-chart/ng-google-chart
 //= require angular-bootstrap/ui-bootstrap.min
 //= require angular-bootstrap/ui-bootstrap-tpls.min
 //= require angular-ui-select/dist/select.min

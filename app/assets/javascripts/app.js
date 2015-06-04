@@ -1,4 +1,4 @@
-angular.module('pm', ['templates','ngRoute','controllers', 'rails', 'ngCookies', 'ui.select', 'ngSanitize', 'ui.bootstrap'])
+angular.module('pm', ['templates','ngRoute','controllers', 'rails', 'ngCookies', 'ui.select', 'ngSanitize', 'ui.bootstrap', 'googlechart'])
        .config(['$routeProvider', function($routeProvider) {
             $routeProvider.when('/projects', {
                 templateUrl: 'projects.html',
@@ -82,7 +82,7 @@ angular.module('pm', ['templates','ngRoute','controllers', 'rails', 'ngCookies',
             });
             $routeProvider.when('/reports', {
                 templateUrl: 'reports.html',
-                controller: 'ReportController'
+                controller: 'ReportsController'
             });
        }])
         .run(function($rootScope, $location) {
@@ -503,121 +503,347 @@ angular.module('controllers', [])
                 })
             };
         }])
-        .controller("ReportController", ['$scope', '$routeParams', '$location', '$http', '$rootScope', 'Company', 'Group',  'User', function ($scope, $routeParams, $location, $http, $rootScope, Company, Group, User) {
-        $scope.chartObject = {
-            "type": "LineChart",
-            "displayed": true,
-            "data": {
-                "cols": [
-                    {
-                        "id": "month",
-                        "label": "Month",
-                        "type": "string",
-                        "p": {}
+        .controller("ReportsController", ['$scope', '$routeParams', '$location', '$http', '$rootScope', 'Company', 'Group',  'User', function ($scope, $routeParams, $location, $http, $rootScope, Company, Group, User) {
+        User.get({}, {onlyUsers: true, companyId: $rootScope.company.id}).then(function(users){
+            $scope.users = users;
+            $scope.maxUser = _.max(users, function(user){ return user.finishedTaskCount; });
+            $scope.allTasks =_.reduce(users, function(memo, user){ return memo + user.finishedTaskCount; }, 0);
+            console.log($scope.maxUser)
+            $scope.chartObject = {
+                "type": "LineChart",
+                "displayed": true,
+                "data": {
+                    "cols": [
+                        {
+                            "id": "day",
+                            "label": "День",
+                            "type": "number",
+                            "p": {}
+                        },
+                        {
+                            "id": "cost-id",
+                            "label": "Задачи",
+                            "type": "number"
+                        }
+                    ],
+                    "rows": [
+                        {
+                            "c": [
+                                {
+                                    "v": 1
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 2
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 3
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 4
+                                },
+                                {
+                                    "v": $scope.allTasks
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 5
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 6
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 7
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 8
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 9
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 10
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 11
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 12
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 13
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 14
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 15
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 16
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 17
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 18
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 19
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 20
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 21
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 22
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 23
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 24
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 25
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 26
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 27
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 28
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 29
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        },
+                        {
+                            "c": [
+                                {
+                                    "v": 30
+                                },
+                                {
+                                    "v": 0
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "options": {
+                    "title": "Завершенные задачи",
+                    "displayExactValues": true,
+                    "vAxis": {
+                        "title": "Количество завершенных задач",
+                        "gridlines": {
+                            "count": 10
+                        }
                     },
-                    {
-                        "id": "laptop-id",
-                        "label": "Laptop",
-                        "type": "number",
-                        "p": {}
-                    },
-                    {
-                        "id": "desktop-id",
-                        "label": "Desktop",
-                        "type": "number",
-                        "p": {}
-                    },
-                    {
-                        "id": "server-id",
-                        "label": "Server",
-                        "type": "number",
-                        "p": {}
-                    },
-                    {
-                        "id": "cost-id",
-                        "label": "Shipping",
-                        "type": "number"
-                    }
-                ],
-                "rows": [
-                    {
-                        "c": [
-                            {
-                                "v": "January"
-                            },
-                            {
-                                "v": 19,
-                                "f": "42 items"
-                            },
-                            {
-                                "v": 12,
-                                "f": "Ony 12 items"
-                            },
-                            {
-                                "v": 7,
-                                "f": "7 servers"
-                            },
-                            {
-                                "v": 4
-                            }
-                        ]
-                    },
-                    {
-                        "c": [
-                            {
-                                "v": "February"
-                            },
-                            {
-                                "v": 13
-                            },
-                            {
-                                "v": 1,
-                                "f": "1 unit (Out of stock this month)"
-                            },
-                            {
-                                "v": 10
-                            },
-                            {
-                                "v": 2
-                            }
-                        ]
-                    },
-                    {
-                        "c": [
-                            {
-                                "v": "March"
-                            },
-                            {
-                                "v": 24
-                            },
-                            {
-                                "v": 5
-                            },
-                            {
-                                "v": 11
-                            },
-                            {
-                                "v": 6
-                            }
-                        ]
-                    }
-                ]
-            },
-            "options": {
-                "title": "Sales per month",
-                "isStacked": "true",
-                "fill": 20,
-                "displayExactValues": true,
-                "vAxis": {
-                    "title": "Sales unit",
-                    "gridlines": {
-                        "count": 10
+                    "hAxis": {
+                        "title": "Дата"
                     }
                 },
-                "hAxis": {
-                    "title": "Date"
-                }
-            },
-            "formatters": {}
-        }
+                "formatters": {}
+            }
+        });
+
         }])
